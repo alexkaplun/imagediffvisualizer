@@ -97,6 +97,7 @@ func (c *Comparer) Compare() error {
 	}
 }
 
+// saves the generated result image into provided output filepath
 func (c *Comparer) saveResult(resultImage image.Image) error {
 	// save the result image file
 	newFile, err := os.Create(c.outputFile)
@@ -119,6 +120,13 @@ func (c *Comparer) saveResult(resultImage image.Image) error {
 	return nil
 }
 
+// Performs input files validation
+// Returns error in case of
+// - can't detect input images format
+// - provided images' mime type is not supported
+// - error when loading input images
+// - output path not valid
+// - output file is not a .png etension
 func (c *Comparer) validateImages() error {
 
 	// validate image 1
@@ -167,6 +175,7 @@ func (c *Comparer) validateImages() error {
 	return nil
 }
 
+// detects mime type for the image at provided filename
 func getImageFormat(filename string) (string, error) {
 	mime, _, err := mimetype.DetectFile(filename)
 	if err != nil {
@@ -176,6 +185,7 @@ func getImageFormat(filename string) (string, error) {
 	}
 }
 
+// checks whether mime type is supported
 func isMimeSupported(mime string) bool {
 	for _, v := range supportedMimes {
 		if v == mime {
