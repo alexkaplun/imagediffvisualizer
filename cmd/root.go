@@ -28,7 +28,7 @@ var RootCmd = &cobra.Command{
 			return
 		}
 		// do the comparison
-		if err = comparer.Compare(); err != nil {
+		if err = comparer.Compare(service.MATCH_MODE_KEEP_ORIGINAL); err != nil {
 			log.Println(err)
 			return
 		}

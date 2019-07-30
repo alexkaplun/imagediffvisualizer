@@ -13,6 +13,7 @@ import (
 var (
 	testImage1 = "test1.png"
 	testImage2 = "test2.png"
+	output     = "output.png"
 )
 
 type direction int
@@ -27,12 +28,12 @@ func TestComparer_Compare(t *testing.T) {
 	createTestImage(testImage1, 150, 150, DIRECTION_UP)
 	createTestImage(testImage2, 150, 150, DIRECTION_DOWN)
 
-	comparer, err := NewComparer(testImage1, testImage2)
+	comparer, err := NewComparer(testImage1, testImage2, output)
 	if err != nil {
 		t.Fatal(err)
 	}
 	// do the comparison
-	if err = comparer.Compare(); err != nil {
+	if err = comparer.Compare(MATCH_MODE_BLACK); err != nil {
 		t.Fatal(err)
 	}
 }

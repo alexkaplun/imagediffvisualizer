@@ -14,6 +14,15 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 )
 
+type MatchMode int
+
+const (
+	// keep matching pixels in original color
+	MATCH_MODE_KEEP_ORIGINAL MatchMode = iota
+	// replace matching pixels with black
+	MATCH_MODE_BLACK
+)
+
 type Comparer struct {
 	imageFile1 string
 	imageFile2 string
@@ -37,7 +46,7 @@ func NewComparer(image1 string, image2 string, output string) (*Comparer, error)
 	return &c, err
 }
 
-func (c *Comparer) Compare() error {
+func (c *Comparer) Compare(mode MatchMode) error {
 	log.Println("compare start")
 
 	bounds := c.image1.image.Bounds()
@@ -58,24 +67,36 @@ func (c *Comparer) Compare() error {
 			var newColor color.RGBA
 			if r1 == r2 {
 				// keep the color if it's the same
+				var matchedColor uint8
+				if mode == MATCH_MODE_KEEP_ORIGINAL {
+					matchedColor = uint8(r1 >> 8)
+				} else {
+					matchedColor = 0
+				}
 				newColor = color.RGBA{
-					R: uint8(r1 >> 8),
-					G: uint8(r1 >> 8),
-					B: uint8(r1 >> 8),
+					R: matchedColor,
+					G: matchedColor,
+					B: matchedColor,
 					A: math.MaxUint8,
 				}
 			} else if r1 < r2 {
+				// normalize r2 - r1 difference to math.MaxUint8
+				normalized := uint8(math.MaxUint8 * float64(r2-r1>>8) / float64(math.MaxUint8))
+
 				//highlight pixels with green if second image pixel is brighter
 				newColor = color.RGBA{
 					R: 0,
-					G: uint8((r2 - r1) >> 8),
+					G: normalized,
 					B: 0,
 					A: math.MaxUint8,
 				}
 			} else {
+				// normalize r1 - r2 difference to math.MaxUint8
+				normalized := uint8(math.MaxUint8 * float64(r1-r2>>8) / float64(math.MaxUint8))
+
 				//highlight pixels with red if second image pixel is darker
 				newColor = color.RGBA{
-					R: uint8((r1 - r2) >> 8),
+					R: normalized,
 					G: 0,
 					B: 0,
 					A: math.MaxUint8,
