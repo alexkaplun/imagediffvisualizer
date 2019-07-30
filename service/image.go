@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+// representation of an image for comparer
+// to be used for future extension to support multiple mime types
 type IMG struct {
 	mime  string
 	image image.Image
