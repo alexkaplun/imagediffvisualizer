@@ -21,7 +21,7 @@ var RootCmd = &cobra.Command{
 	Short: "Provides visualization of greyscale images difference",
 	Long:  `Provides visualization of greyscale images difference`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// instantiante comparer and validate images
+		// instantiate comparer and validate images
 		comparer, err := service.NewComparer(image1, image2, output)
 		if err != nil {
 			log.Println(err)

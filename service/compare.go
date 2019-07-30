@@ -66,7 +66,7 @@ func (c *Comparer) Compare(mode MatchMode) error {
 
 			var newColor color.RGBA
 			if r1 == r2 {
-				// keep the color if it's the same
+				// define the resulting color depending on the match mode
 				var matchedColor uint8
 				if mode == MATCH_MODE_KEEP_ORIGINAL {
 					matchedColor = uint8(r1 >> 8)
@@ -81,7 +81,7 @@ func (c *Comparer) Compare(mode MatchMode) error {
 				}
 			} else if r1 < r2 {
 				// normalize r2 - r1 difference to math.MaxUint8
-				normalized := uint8(math.MaxUint8 * float64(r2-r1>>8) / float64(math.MaxUint8))
+				normalized := uint8(math.MaxUint8 * float64((r2-r1)>>8) / float64(math.MaxUint8))
 
 				//highlight pixels with green if second image pixel is brighter
 				newColor = color.RGBA{
@@ -92,7 +92,7 @@ func (c *Comparer) Compare(mode MatchMode) error {
 				}
 			} else {
 				// normalize r1 - r2 difference to math.MaxUint8
-				normalized := uint8(math.MaxUint8 * float64(r1-r2>>8) / float64(math.MaxUint8))
+				normalized := uint8(math.MaxUint8 * float64((r1-r2)>>8) / float64(math.MaxUint8))
 
 				//highlight pixels with red if second image pixel is darker
 				newColor = color.RGBA{
