@@ -105,13 +105,16 @@ func (c *Comparer) saveResult(resultImage image.Image) error {
 		panic(err.Error())
 	}
 	defer newFile.Close()
+
+	// create the png encoder with best compression
 	encoder := png.Encoder{
 		CompressionLevel: png.BestCompression,
 		BufferPool:       nil,
 	}
+	// write the output file
 	err = encoder.Encode(newFile, resultImage)
 	if err != nil {
-		return errors.Wrap(err, "can't save the result file")
+		return errors.Wrap(err, "can't save the output file")
 	}
 	return nil
 }
